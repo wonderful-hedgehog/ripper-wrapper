@@ -87,7 +87,7 @@ while test -n "$1"; do
   shift
 done
 
-curl --silent $TARGETS_URL | jq -r '.[]' > targets.txt
+curl --silent $TARGETS_URL | docker run -i stedolan/jq -r '.[]' > targets.txt
 
 check_dependencies
 check_params
