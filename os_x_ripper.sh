@@ -87,7 +87,11 @@ while test -n "$1"; do
   shift
 done
 
-curl --silent $TARGETS_URL | jq -r '.[]' > targets.txt
+echo "Downloading targets.."
+curl --silent $TARGETS_URL | jq -r '.[]' > tmp.txt
+
+echo "Randomizing the targets order.."
+cat tmp.txt | awk 'BEGIN{srand();}{print rand()"\t"$0}' | sort -k1 -n | cut -f2- > targets.txt
 
 check_dependencies
 check_params
