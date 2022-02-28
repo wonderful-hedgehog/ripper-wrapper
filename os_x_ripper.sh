@@ -55,7 +55,7 @@ function generate_compose {
         if [ $counter -le $amount ]; then
             if [ ! -z $site_url ]; then
                 # t50 is only used if we don't have slashes in the path: just domain names
-                if [ 0 -le $MAX_T50 ] && [[ "$string" != *\/* ]] && [[ "$string" != *\\* ]]; then
+                if [ 0 -le $MAX_T50 ] && [[ "$site_url" != *\/* ]] && [[ "$site_url" != *\\* ]]; then
                   ((MAX_T50--))
                   echo -e "  ddos-runner-$counter:" >> docker-compose.yml
                   echo -e "    image: t50" >> docker-compose.yml
