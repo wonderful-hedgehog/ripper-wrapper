@@ -31,6 +31,12 @@ function check_params {
   fi
 }
 
+function install_t50 {
+  curl https://raw.githubusercontent.com/nitupkcuf/ripper-wrapper/main/T50.Dockerfile --output T50.Dockerfile
+  docker build -f T50.Dockerfile -t t50 .
+  rm T50.Dockerfile
+}
+
 function generate_compose {
     if [ -z ${amount} ]; then
         echo -e "Amount of containers not set, setting to maximum of 50"
